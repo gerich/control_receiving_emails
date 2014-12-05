@@ -1,0 +1,20 @@
+    <fieldset>
+        <legend>
+            <a href="#" class="add"><img src="/images/add.png"></a>
+            <a href="#" class="save"><img src="/images/save.png"></a>
+            <a href="#" class="delete"><img src="/images/delete.png"></a>
+        </legend>
+        <p>
+            <label for="address"><%= t(:email_server) %></label>
+            <input type="text" name="address" id="address" value="">
+        </p>
+        <p>
+            <label for="port"><%= t(:email_port) %></label>
+            <input type="text" name="port" id="port" value="">
+        </p>
+        <p>
+            <label for="ssl"><%= t(:email_ssl) %></label>
+            <input type="hidden" name="ssl" value="0">
+            <input type="checkbox" name="ssl" id="ssl" value="1">
+        </p>
+    </fieldset>

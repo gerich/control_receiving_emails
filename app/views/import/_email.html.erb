@@ -1,0 +1,43 @@
+<fieldset class="email">
+    <legend>
+        <a href="#" class="add"><img src="/images/add.png"></a>
+        <a href="#" class="save"><img src="/images/save.png"></a>
+        <a href="#" class="delete"><img src="/images/delete.png"></a>
+    </legend>
+
+    <p>
+        <label for="login"><%= t(:email_login) %></label>
+        <input type="text" name="login" id="login" value="">
+    </p>
+
+    <p>
+        <label for="password"><%= t(:email_password) %></label>
+        <input type="text" name="password" id="password" value="">
+    </p>
+
+    <p>
+        <label for="issues_import_server_id"><%= t(:email_server_id) %></label>
+        <select name="issues_import_server_id" id="issues_import_server_id"></select>
+    </p>
+
+    <p>
+        <label for="active"><%= t(:email_active) %></label>
+        <input type="hidden" name="active" value="0">
+        <input id="active" type="checkbox" checked="checked" name="active" id="active" value="1">
+    </p>
+
+    <p>
+        <label for="project_id"><%= t(:email_project) %></label>
+        <select name="project_id" id="project_id"></select>
+    </p>
+
+    <p>
+        <label for="tracker_id"><%= t(:email_tracker) %></label>
+        <select name="tracker_id" id="tracker_id"></select>
+    </p>
+
+    <p>
+        <label for="issue_category_id"><%= t(:email_category) %></label>
+        <select name="issue_category_id" id="issue_category_id"></select>
+    </p>
+</fieldset>

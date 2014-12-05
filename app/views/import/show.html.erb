@@ -1,0 +1,35 @@
+<% content_for :header_tags do %>
+        <%= stylesheet_link_tag 'admin', :plugin => 'control_receiving_emails' %>
+        <%= javascript_include_tag 'admin', :plugin => 'control_receiving_emails' %>
+<% end %>
+
+<div class="import-wrapper center">
+
+<h2><%= t(:settings_header) %></h2>
+
+<h3><%= t(:servers_list) %></h3>
+<div id="servers-container">
+</div>
+
+<h3><%= t(:emails_list) %></h3>
+<div id="emails-container">
+</div>
+<script type="text/template" id="email-template">
+    <%= render "email" %>
+</script>
+<script type="text/template" id="server-template">
+    <%= render "server" %>
+</script>
+<script>
+    var emails  = <%= raw(@emails.to_json) %>
+    var servers = <%= raw(@servers.to_json) %>
+    var projects = <%= raw(@projects.to_json) %>
+
+    importSettings
+        .setServerTemplate($('#server-template').html())
+        .setEmailTemplate($('#email-template').html())
+        .setProjects(projects)
+        .init(emails, servers)
+</script>
+
+</div>
