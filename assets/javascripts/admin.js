@@ -54,6 +54,9 @@ var importSettings = (function () {
     });
   
     container.data().id = data.id;
+    if (data.project_id) {
+      bindChangeProject(container.find('[name=project_id]'), data);
+    }
   }
 
   function projectsList() {
@@ -239,6 +242,33 @@ var importSettings = (function () {
     saveRequest(fieldset); 
   }
 
+  function bindChangeProject(el, data) {
+    var el = $(el);
+    var project = el.val();
+    var container = el.parentsUntil('fieldset').parent();
+    var id = container.data().id;
+
+    if (id === 0) {
+      id = '';
+    } else {
+      id = '_' + id;
+    }
+
+    $.each(projects, function () {
+      if (this.id == project) {
+        project = this;
+      }
+    });
+  
+    container.find('#tracker_id' + id).html('').append(trackersList(project));
+    container.find('#issue_category_id' + id).html('').append(categoriesList(project));
+    
+    if (data) {
+      container.find('#tracker_id' + id).val(data.tracker_id);
+      container.find('#issue_category_id' + id).val(data.issue_category_id);
+    }
+  }
+
   $(function() {
     emailsContainer
       .on('click', 'legend .add', function (e) {
@@ -252,6 +282,9 @@ var importSettings = (function () {
       .on('click', 'legend .save', function (e) {
         e.preventDefault();
         bindSaveFieldSet(this, emailsContainer, saveEmailRequest, validateServer);
+      })
+      .on('change', 'fieldset select[name=project_id]', function () {
+        bindChangeProject(this);
       });
     serversContainer
       .on('click', 'legend .add', function (e) {
