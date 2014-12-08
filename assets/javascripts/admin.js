@@ -152,8 +152,18 @@ var importSettings = (function () {
       '/issues_import_servers/' + id,
       params,
       function (data) {
+        if (data.errors !== undefined) {
+          alert('Вы заполнили не все поля');
+        } 
+
         if (!id && data.server.id) {
           fieldSet.data().id = data.server.id;
+          emailsContainer.find('select[name=issues_import_server_id]')
+            .append(
+              '<option value="' + data.server.id + '">'
+              + data.server.address + ':' + data.server.port
+              + '</option>'
+            );
         }
       }
     );
@@ -173,6 +183,13 @@ var importSettings = (function () {
       '/issues_import_emails/' + id,
       params,
       function (data) {
+
+        if (data.errors !== undefined) {
+          alert('Вы заполнили не все поля');
+        } else {
+          emails.pop(data.email);
+        }
+
         if (!id && data.email.id) {
           fieldSet.data().id = data.email.id;
         }
@@ -184,7 +201,10 @@ var importSettings = (function () {
     var id = fieldSet.data().id;
     return $.post(
       '/issues_import_servers/' + id,
-      { _method: 'delete' }
+      { _method: 'delete' },
+      function () {
+        emailsContainer.find('option[value=' + id + ']').remove();
+      }
     );
   }
 
