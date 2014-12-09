@@ -2,3 +2,6 @@
 
 .import-wrapper .center {text-align: center}
 
+span.error {color: red; margin-left: 10px;}
+select.error, input.error {border: 1px solid red;}
+

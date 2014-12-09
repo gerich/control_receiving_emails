@@ -137,6 +137,19 @@ var importSettings = (function () {
     server.data().id = 0;
     return server;
   }
+
+  function clearErrors(fieldSet) {
+    fieldSet.find('input, select').removeClass('error');
+    fieldSet.find('span.error').remove();
+  }
+
+  function setErrors(fieldSet, errors) {
+    $.each(errors, function (field, messages) {
+      fieldSet.find('[name=' + field + ']')
+        .addClass('error')
+        .after('<span class="error">'+ messages[0] + '</span>');
+    });
+  }
   
   function saveServerRequest(fieldSet) {
     var id = fieldSet.data().id;
@@ -148,16 +161,19 @@ var importSettings = (function () {
       params['_method'] = 'put';
     }
 
+    clearErrors(fieldSet);
+
     return $.post(
       '/issues_import_servers/' + id,
       params,
       function (data) {
         if (data.errors !== undefined) {
-          alert('Вы заполнили не все поля');
-        } 
+          setErrors(fieldSet, data.errors);
+        }
 
         if (!id && data.server.id) {
           fieldSet.data().id = data.server.id;
+          servers.pop(data.server);
           emailsContainer.find('select[name=issues_import_server_id]')
             .append(
               '<option value="' + data.server.id + '">'
@@ -179,19 +195,19 @@ var importSettings = (function () {
       params['_method'] = 'put';
     }
 
+    clearErrors(fieldSet);
+
     return $.post(
       '/issues_import_emails/' + id,
       params,
       function (data) {
-
         if (data.errors !== undefined) {
-          alert('Вы заполнили не все поля');
-        } else {
-          emails.pop(data.email);
-        }
+          setErrors(data.errors);
+        } 
 
         if (!id && data.email.id) {
           fieldSet.data().id = data.email.id;
+          emails.pop(data.email);
         }
       }
     );
