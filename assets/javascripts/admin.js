@@ -218,7 +218,22 @@ var importSettings = (function () {
     return $.post(
       '/issues_import_servers/' + id,
       { _method: 'delete' },
-      function () {
+      function (data) {
+        emailsContainer.find('fieldset').each(function () {
+          var self = $(this);
+          var id = self.data().id;
+          var count = emailsContainer.find('fieldset').length;
+          if (data.emails.indexOf(id) >= 0) {
+            if (count == 1) {
+              self.find('[name=login]').val('');
+              self.find('[name=password]').val('');
+              self.find('[name=issue_category_id]').val(0);
+              self.data().id = 0;
+            } else {
+              self.remove();
+            }
+          }
+        });
         emailsContainer.find('option[value=' + id + ']').remove();
       }
     );
