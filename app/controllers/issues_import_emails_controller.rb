@@ -21,10 +21,11 @@ class IssuesImportEmailsController < ApplicationController
   private 
 
   def render_email(email)
+    hash = email.attributes
     if (email.errors.empty?) then
-      render :json =>{email: email.attributes}
+      render :json =>{email: hash}
     else
-      render :json =>{email: email.attributes, errors: email.errors}
+      render :json =>{email: hash, errors: email.errors}
     end
   end
 end

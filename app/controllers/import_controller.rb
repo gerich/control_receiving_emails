@@ -3,11 +3,8 @@ class ImportController < ApplicationController
 
   def show
     @servers = transform(IssuesImportServer.all)
-    @emails = transform(IssuesImportEmail.all)
-    @projects = transform_projects(Project.includes(:trackers, issue_categories: [:assigned_to]).all)
-  end
-
-  def save
+    @emails = transform(IssuesImportEmail.includes(issue_category: [:project, :assigned_to]).all)
+    @projects = transform_projects(Project.includes(:trackers, :members => [:principal]).all)
   end
 
   private 
@@ -15,14 +12,14 @@ class ImportController < ApplicationController
   def transform_projects(projects)
     transformed_projects = []
     projects.each do |project|
-      hash = { :id => project.id, :name => project.name, :trackers => [], :categories => [] }
+      hash = { :id => project.id, :name => project.name, :trackers => [], :users => [] }
       
       project.trackers.each do |tracker|
         hash[:trackers].push({ :id => tracker.id, :name => tracker.name })
       end
 
-      project.issue_categories.each do |category|
-        hash[:categories].push({ :id => category.id, :name => category.name, :assigend_to => category.assigned_to.name })
+      project.members.each do |member|
+        hash[:users].push({ :id => member.user.id, :name => member.user.name })
       end
 
       transformed_projects.push(hash)

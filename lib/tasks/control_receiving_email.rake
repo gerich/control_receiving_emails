@@ -7,26 +7,27 @@ require File.expand_path(File.dirname(__FILE__) + "/../../../../config/environme
 
 def import_issues_from_emails
   Dir.chdir Rails.root
-  IssuesImportEmail.includes(:project, :tracker, :issues_import_server).where(:active => true).all.each do |email|
+  IssuesImportEmail.includes(:tracker, :issues_import_server, issue_category: [:project, :assigned_to])
+    .active.has_project.has_user.all.each do |email|
+    
     args = {
       :host => email.issues_import_server.address,
       :port => email.issues_import_server.port,
       :username => email.login,
       :password => email.password,
-      :project => email.project.identifier,
+      :project => email.issue_category.project.identifier,
       :tracker => email.tracker.name,
+      :category => email.issue_category.name,
       :unknown_user => 'accept',
       :no_permission_check => 1,
     }
     args[:ssl] = 1 if email.issues_import_server.ssl
-    args[:category] = email.issue_category.name unless email.issue_category.nil?
 
     dump = "bundle exec rake redmine:email:receive_pop3" 
     args.each do |hash, value|
-      dump << " #{hash}=#{value}"
+      dump << " #{hash}='#{value}'"
     end
-
-    #Rake::Task['redmine:email:receive_pop3'].execute(Rake::TaskArguments.new(args.keys, args.values))
+    # puts dump
     system(dump)
   end
 end

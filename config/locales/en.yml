@@ -18,3 +18,4 @@ en:
     email_tracker: "Tracker"
     email_project: "Project"
     email_category: "Category"
+    email_user: "Assigned to"

@@ -3,7 +3,6 @@
 var importSettings = (function () {
   var emailTemplate;
   var serverTemplate;
-  var projects;
   var servers = [];
   var emails = [];
   var emailsContainer;
@@ -73,6 +72,24 @@ var importSettings = (function () {
     return projectsList.list;
   }
 
+  function usersList(project) {
+    if (!project.users.length) {
+      return ''
+    }
+
+    if (usersList[project.id] !== undefined) {
+      return usersList[project.id];
+    }
+
+    usersList[project.id] = '';
+    project.users.map(function(user) {
+      usersList[project.id] += '<option value="' + user.id + '">'
+        + user.name + '</option>';
+    });
+
+    return usersList[project.id];
+  }
+
   function trackersList(project) {
     if (!project.trackers.length) {
       return ''
@@ -91,24 +108,6 @@ var importSettings = (function () {
     return trackersList[project.id];
   }
 
-  function categoriesList(project) {
-    if (!project.categories.length) {
-      return ''
-    }
-
-    if (categoriesList[project.id] !== undefined) {
-      return categoriesList[project.id];
-    }
-
-    categoriesList[project.id] = '<option value="0"></option>';
-    project.categories.map(function(el) {
-      categoriesList[project.id] += '<option value="' + el.id + '">'
-        + el.name + '</option>';
-    }); 
-
-    return categoriesList[project.id];
-  }
-
   function newEmail() {
     var email = $(emailTemplate);
     var serverSelect = email.find('#issues_import_server_id');
@@ -124,7 +123,7 @@ var importSettings = (function () {
     if (projects.length) {
       email.find('#project_id').append(projectsList());
       email.find('#tracker_id').append(trackersList(projects[0]));
-      email.find('#issue_category_id').append(categoriesList(projects[0]));
+      email.find('#user_id').append(usersList(projects[0]))
     } 
     
     email.data().id = 0;
@@ -144,6 +143,15 @@ var importSettings = (function () {
   }
 
   function setErrors(fieldSet, errors) {
+    var rename_to_id = [ 'project' , 'tracker' , 'user' ]
+
+    rename_to_id.map(function (el) {
+      if (errors[el] != undefined) {
+        errors[el + '_id'] = errors[el];
+        delete errors[el];
+      }
+    })
+
     $.each(errors, function (field, messages) {
       fieldSet.find('[name=' + field + ']')
         .addClass('error')
@@ -173,13 +181,17 @@ var importSettings = (function () {
 
         if (!id && data.server.id) {
           fieldSet.data().id = data.server.id;
-          servers.pop(data.server);
+          servers.push(data.server);
           emailsContainer.find('select[name=issues_import_server_id]')
             .append(
               '<option value="' + data.server.id + '">'
               + data.server.address + ':' + data.server.port
               + '</option>'
             );
+        } else if (id && data.server.id) {
+          emailsContainer.find('select[name=issues_import_server_id]')
+            .find('option[value="' + data.server.id + '"]')
+            .text(data.server.address + ':' + data.server.port)
         }
       }
     );
@@ -202,7 +214,7 @@ var importSettings = (function () {
       params,
       function (data) {
         if (data.errors !== undefined) {
-          setErrors(data.errors);
+          setErrors(fieldSet, data.errors);
         } 
 
         if (!id && data.email.id) {
@@ -227,7 +239,6 @@ var importSettings = (function () {
             if (count == 1) {
               self.find('[name=login]').val('');
               self.find('[name=password]').val('');
-              self.find('[name=issue_category_id]').val(0);
               self.data().id = 0;
             } else {
               self.remove();
@@ -299,6 +310,12 @@ var importSettings = (function () {
     var container = el.parentsUntil('fieldset').parent();
     var id = container.data().id;
 
+    if (project == 0) {
+      container.find('#tracker_id' + id).html('');
+      container.find('#user_id' + id).html('');
+      return;
+    }
+
     if (id === 0) {
       id = '';
     } else {
@@ -312,11 +329,11 @@ var importSettings = (function () {
     });
   
     container.find('#tracker_id' + id).html('').append(trackersList(project));
-    container.find('#issue_category_id' + id).html('').append(categoriesList(project));
+    container.find('#user_id' + id).html('').append(usersList(project));
     
     if (data) {
       container.find('#tracker_id' + id).val(data.tracker_id);
-      container.find('#issue_category_id' + id).val(data.issue_category_id);
+      container.find('#user_id' + id).val(data.user_id);
     }
   }
 

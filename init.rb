@@ -2,7 +2,6 @@ require 'redmine'
 
 require_dependency 'issue_category_patch'
 require_dependency 'tracker_patch'
-require_dependency 'project_patch'
 
 Redmine::Plugin.register :control_receiving_emails do
   name 'Control Receiveng emails plugin'
