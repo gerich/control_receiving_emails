@@ -9,7 +9,7 @@ Redmine::Plugin.register :control_receiving_emails do
   description 'A plugin for managing emails for import isses'
   version '0.0.1'
 
-  settings :default => {:emails => []}, :partial => 'settings/control_receiving_emails_settings'
+  # settings :default => {:emails => []}, :partial => 'settings/control_receiving_emails_settings'
 
   menu :admin_menu, :control_receiving_emails, { :controller => 'import', :action => 'show' }, :caption => :menu_caption
 end
