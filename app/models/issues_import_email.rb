@@ -32,11 +32,13 @@ class IssuesImportEmail < ActiveRecord::Base
   end
 
   def user_id
-    self.issue_category.assigned_to_id unless self.issue_category.nil?
+    return self.issue_category.assigned_to_id unless self.issue_category.nil?
+    0
   end
 
   def project_id
-    self.issue_category.project_id unless self.issue_category.nil?
+    return self.issue_category.project_id unless self.issue_category.nil?
+    0
   end
 
   def user
@@ -51,7 +53,6 @@ class IssuesImportEmail < ActiveRecord::Base
   
   def set_category
     return if @user_id.to_i.nonzero?.nil? or @project_id.to_i.nonzero?.nil?
-    puts 'ololololo'
     name = "user: " + @user_id.to_s + " project: " + @project_id.to_s
     category = IssueCategory.where(project_id: @project_id, assigned_to_id: @user_id, name: name).first
     if category.nil? 

@@ -1,8 +1,9 @@
 <fieldset class="email">
+
     <legend>
-        <a href="#" class="add"><img src="/images/add.png"></a>
-        <a href="#" class="save"><img src="/images/save.png"></a>
-        <a href="#" class="delete"><img src="/images/delete.png"></a>
+        <a href="#" class="add"><img src="/images/add.png" title="<%= t(:add_email) %>"></a>
+        <a href="#" class="save"><img src="/images/save.png" title="<%= t(:save_email) %>"></a>
+        <a href="#" class="delete"><img src="/images/delete.png" title="<%= t(:delete_email) %>"></a>
     </legend>
 
     <p>
@@ -21,12 +22,6 @@
     </p>
 
     <p>
-        <label for="active"><%= t(:email_active) %></label>
-        <input type="hidden" name="active" value="0">
-        <input id="active" type="checkbox" checked="checked" name="active" id="active" value="1">
-    </p>
-
-    <p>
         <label for="project_id"><%= t(:email_project) %></label>
         <select name="project_id" id="project_id"></select>
     </p>
@@ -40,4 +35,11 @@
         <label for="user_id"><%= t(:email_user) %></label>
         <select name="user_id" id="user_id"></select>
     </p>
+
+    <p>
+        <label for="active"><%= t(:email_active) %></label>
+        <input type="hidden" name="active" value="0">
+        <input id="active" type="checkbox" checked="checked" name="active" id="active" value="1">
+    </p>
+
 </fieldset>

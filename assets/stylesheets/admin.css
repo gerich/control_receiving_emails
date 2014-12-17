@@ -2,6 +2,12 @@
 
 .import-wrapper .center {text-align: center}
 
-span.error {color: red; margin-left: 10px;}
-select.error, input.error {border: 1px solid red;}
+.import-wrapper span.error {color: red; margin-left: 10px;}
+.import-wrapper select.error, input.error {border: 1px solid red;}
 
+.import-wrapper fieldset {display: inline-block; margin-right: 20px; margin-bottom: 20px;}
+.import-wrapper fieldset legend a {margin-left: 5px;}
+
+#emails-container fieldset {}
+
+#server-container fieldset {}

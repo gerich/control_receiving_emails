@@ -62,13 +62,14 @@ var importSettings = (function () {
     if (projectsList.list !== undefined) {
       return projectsList.list;
     }
-
+    
     projectsList.list = '';
     projects.map(function(project) {
       projectsList.list += '<option value="' + project.id + '">'
         + project.name + '</option>';
     }) 
 
+    projectsList.list += '<option selected="selected"></option>';
     return projectsList.list;
   }
 
@@ -86,6 +87,7 @@ var importSettings = (function () {
       usersList[project.id] += '<option value="' + user.id + '">'
         + user.name + '</option>';
     });
+    usersList[project.id] += '<option selected="selected"></option>';
 
     return usersList[project.id];
   }
@@ -104,6 +106,7 @@ var importSettings = (function () {
       trackersList[project.id] += '<option value="' + tracker.id + '">'
         + tracker.name + '</option>';
     });
+    trackersList[project.id] += '<option selected="selected"></option>';
 
     return trackersList[project.id];
   }
@@ -121,11 +124,10 @@ var importSettings = (function () {
     });
 
     if (projects.length) {
-      email.find('#project_id').append(projectsList());
-      email.find('#tracker_id').append(trackersList(projects[0]));
-      email.find('#user_id').append(usersList(projects[0]))
+      email.find('#project_id').html(projectsList());
+      email.find('#tracker_id').html(trackersList(projects[0]));
+      email.find('#user_id').html(usersList(projects[0]));
     } 
-    
     email.data().id = 0;
 
     return email;
@@ -215,7 +217,11 @@ var importSettings = (function () {
       function (data) {
         if (data.errors !== undefined) {
           setErrors(fieldSet, data.errors);
-        } 
+        } else {
+          fieldSet.find('[name=user_id]').val(data.email.user_id);
+          fieldSet.find('[name=tracker_id]').val(data.email.tracker_id);
+          fieldSet.find('[name=project_id]').val(data.email.project_id);
+        }
 
         if (!id && data.email.id) {
           fieldSet.data().id = data.email.id;
