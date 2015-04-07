@@ -31,13 +31,6 @@ def import_issues_from_emails
   end
 end
 
-task :before_email_recieve do |t, args|
-  puts t
-  puts args
-end
-
-Rake::Task["redmine:email:receive_pop3"].enhance [:before_email_recieve]
-
 namespace :redmine do
   task :import_issues_from_email => :environment do
     import_issues_from_emails

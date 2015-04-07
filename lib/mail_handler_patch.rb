@@ -1,16 +1,15 @@
-require_dependency 'issue_category'
+require_dependency 'mail_handler'
 
 # from https://github.com/edavis10/redmine-budget-plugin/
 # /lib/issue_path.rb
 
-module IssueCategoryPatch
+module MailHandlerPatch
   def self.included(base)
     base.extend(ClassMethods)
     base.send(:include, InstanceMethods)
 
     base.class_eval do
       unloadable
-      has_one :issues_import_email, :dependent => :nullify
     end
   end
 
@@ -24,4 +23,4 @@ module IssueCategoryPatch
 
 end
 
-IssueCategory.send(:include, IssueCategoryPatch)
+IssueCategory.send(:include, MailHandlerPatch)
